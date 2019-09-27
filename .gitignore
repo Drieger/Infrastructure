@@ -206,7 +206,6 @@ dmypy.json
 [Ll]ib
 [Ll]ib64
 [Ll]ocal
-# [Ss]cripts
 pyvenv.cfg
 .venv
 env/
@@ -217,7 +216,7 @@ venv.bak/
 pip-selfcheck.json
 
 ### VisualStudioCode ###
-.vscode/*
+.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
