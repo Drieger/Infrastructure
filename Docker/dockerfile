@@ -1,0 +1,12 @@
+FROM node:12 AS dev
+WORKDIR /app
+COPY ./package.json /app
+COPY ./index.js /app
+RUN npm install
+
+FROM node:12-alpine AS prod
+WORKDIR /app
+COPY --from=dev /app/node_modules ./node_modules/
+COPY --from=dev /app/index.js .
+EXPOSE 3000
+CMD ["node", "index.js"]

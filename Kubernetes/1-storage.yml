@@ -1,0 +1,25 @@
+# Storage class definition to allow
+# Volume claims to create it automatically
+
+# SSD backed storage, faster
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: ssd-storage
+#   role: storage
+# provisioner: kubernetes.io/gce-pd
+# parameters:
+#   type: pd-ssd
+
+---
+# Standard backed storage, slower than previous one
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: hdd-storage
+  labels:
+    tier: backend
+    role: storage
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-standard

@@ -1,0 +1,41 @@
+---
+# Application deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    name: app
+    tier: backend
+    role: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          image: gcr.io/project/app
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-app-secret
+                  key: username
+            - name: DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-app-secret
+                  key: password
+            - name: DATABASE_URL
+              value: mongodb://<db-app-username>:<db-app-password>@mongo-0.mongo/agendou?authSource=admin

@@ -1,0 +1,20 @@
+---
+# Ingress
+# Create an IP address first
+# gcloud compute addresses create app-static-ip --global
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: 'app-static-ip'
+    # kubernetes.io/ingress.allow-http: "false"
+    networking.gke.io/managed-certificates: 'app-certificate'
+spec:
+  rules:
+    - host: domain.com
+      http:
+        paths:
+          - backend:
+              serviceName: app-service
+              servicePort: 3000

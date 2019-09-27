@@ -1,0 +1,56 @@
+---
+# Mongodb statefulsets
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  labels:
+    role: database
+    tier: backend
+    app: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+  serviceName: mongo
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongo
+        image: mongo
+        imagePullPolicy: Always
+        env:
+        - name: MONGO_INITDB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: database
+        - name: MONGO_INITDB_ROOT_USERNAME 
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: username
+        - name: MONGO_INITDB_ROOT_PASSWORD 
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: password
+        ports:
+        - containerPort: 27017
+        volumeMounts:
+        - name: dbdata
+          mountPath: /data/db
+  volumeClaimTemplates:
+  - metadata:
+      name: dbdata
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "hdd-storage"
+      resources:
+        requests:
+          storage: 10Gi
